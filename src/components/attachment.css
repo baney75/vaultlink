@@ -1,0 +1,97 @@
+.attachment-root {
+  display: grid;
+  gap: 15px;
+  min-width: 0;
+  padding: 22px max(28px, calc((100% - 960px) / 2)) 38px;
+  color: #304238;
+  overflow: auto;
+}
+.attachment-workspace { display: grid; gap: 13px; min-width: 0; }
+.attachment-meta { margin: 0; color: #87988b; font-size: 12px; }
+.attachment-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.attachment-toolbar label, .attachment-fields label { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; color: #576e60; font-size: 12px; }
+.attachment-toolbar input, .attachment-toolbar select, .attachment-fields input, .attachment-canvas-edit textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 1px solid #ccdacf;
+  border-radius: 7px;
+  padding: 8px 10px;
+  background: #fff;
+  color: #304238;
+  font: inherit;
+}
+.attachment-toolbar input[type=number], .attachment-fields input { width: 74px; }
+.attachment-toolbar button, .attachment-canvas-edit button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 35px;
+  max-width: 100%;
+  border: 1px solid #d2dfd4;
+  border-radius: 7px;
+  padding: 7px 11px;
+  background: #f7faf7;
+  color: #276151;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.attachment-toolbar button:hover, .attachment-canvas-edit button:hover { background: #eaf3eb; }
+.attachment-toolbar button:disabled, .attachment-canvas-edit button:disabled { opacity: .5; cursor: not-allowed; }
+.attachment-savebar button:first-of-type, .attachment-position button {
+  border-color: #176e5d;
+  background: #176e5d;
+  color: #fff;
+}
+.attachment-savebar button:first-of-type:hover, .attachment-position button:hover { background: #115b4c; }
+.attachment-toolbar :focus-visible, .attachment-fields :focus-visible, .attachment-canvas-node:focus-visible, .attachment-canvas-edit :focus-visible { outline: 2px solid #287e72; outline-offset: 2px; }
+.attachment-savebar { padding-top: 12px; border-top: 1px solid #e9eee7; }
+.attachment-savebar label { flex: 1 1 100%; }
+.attachment-path { flex: 1 1 260px; width: min(100%, 480px); }
+.attachment-hint { margin: 0; color: #788b7c; font-size: 12px; line-height: 1.5; }
+.attachment-error { margin: 0; padding: 10px 12px; border: 1px solid #e9c3b5; border-radius: 7px; background: #fff4ef; color: #8a3f30; overflow-wrap: anywhere; }
+.attachment-pdf-scroll, .attachment-image-scroll, .attachment-canvas-scroll {
+  position: relative;
+  overflow: auto;
+  max-width: 100%;
+  min-height: 140px;
+  max-height: 65vh;
+  border: 1px solid #e0e9e0;
+  border-radius: 8px;
+  background: #edf2ec;
+}
+.attachment-pdf-scroll { text-align: center; padding: 18px; }
+.attachment-pdf-scroll canvas { max-width: none; box-shadow: 0 3px 15px #28423325; background: #fff; }
+.attachment-clickable { cursor: crosshair; }
+.attachment-render-status { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; color: #6e8875; font-size: 13px; }
+.attachment-ready { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.attachment-image-scroll { display: grid; place-items: center; padding: 18px; }
+.attachment-image-scroll canvas { max-width: 100%; height: auto; box-shadow: 0 3px 15px #28423325; background: repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 50%/18px 18px; }
+.attachment-fields { display: flex; flex-wrap: wrap; gap: 10px 16px; border: 1px solid #e0e9e0; border-radius: 8px; padding: 10px 12px; }
+.attachment-fields legend { padding: 0 5px; color: #426451; font-size: 12px; font-weight: 700; }
+.attachment-media { display: grid; gap: 5px; }
+.attachment-media audio { width: 100%; }
+.attachment-media video { max-width: 100%; max-height: 70vh; background: #111; }
+.attachment-media p { margin: 0; color: #87988b; font-size: 12px; }
+.attachment-canvas-map { position: relative; background-color: #f9fbf8; background-image: radial-gradient(#cbdccf 1px, transparent 1px); background-size: 20px 20px; }
+.attachment-canvas-edges { position: absolute; inset: 0; pointer-events: none; }
+.attachment-canvas-edges line { stroke: #89aa91; stroke-width: 2; }
+.attachment-canvas-node { position: absolute; display: flex; flex-direction: column; text-align: left; gap: 5px; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; border: 1px solid #b8cdbd; border-radius: 8px; background: #fff; box-shadow: 0 2px 5px #2842331c; padding: 10px; cursor: pointer; color: #304238; }
+.attachment-canvas-node.selected { border: 2px solid #287e72; }
+.attachment-canvas-node small { color: #718a77; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.attachment-canvas-node span { overflow: hidden; font-size: 12px; line-height: 1.4; }
+.attachment-canvas-edit { display: grid; gap: 8px; }
+.attachment-canvas-edit textarea { width: 100%; resize: vertical; }
+.attachment-canvas-edit button { justify-self: start; }
+@media (max-width: 650px) {
+  .attachment-root { padding: 18px 17px 30px; }
+  .attachment-pdf-scroll, .attachment-image-scroll { padding: 8px; }
+}
+@media (max-width: 420px) {
+  .attachment-toolbar { align-items: stretch; }
+  .attachment-toolbar button { min-height: 39px; }
+  .attachment-path { flex-basis: 100%; width: 100%; }
+  .attachment-savebar label { display: grid; width: 100%; }
+}

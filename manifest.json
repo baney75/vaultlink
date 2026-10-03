@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "VaultLink",
+  "version": "0.1.0",
+  "description": "Browse, write, and work with your Obsidian vault in a sidebar or full workspace over Tailscale.",
+  "minimum_chrome_version": "116",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9wv8+Q4b7qqExbPcpCl+s3z4YNjCpK1TIcF3y18esSxpr1TT+KB91qMoGZ+NBzfkCfKvm9lG2JoKsqfSgu4501tAvko5l90zQ28RscmJ0VxUmiOuAvArF59JxGHt/xylz+6snjAIK3uWdbRRTH0zwzBjRvYYavEf731sTlCGkJyoweY9xcsK+63n+D/JMwBcET4MqNcK7FDzvEKEtVf9hNJKK/wjta90kcDrXijizg488uPrU2Attolpr5VzWX/LxVoXZUf3BR8T8USe3E20pzecye+Y0cSOwMtFKwsShbCldcu7P+dX5OxW8klyqAYgW6CYCB8GEaVPT3y5fKFhYQIDAQAB",
+  "permissions": [
+    "sidePanel",
+    "storage"
+  ],
+  "optional_host_permissions": [
+    "http://127.0.0.1/*",
+    "http://localhost/*",
+    "http://[::1]/*",
+    "https://*.ts.net/*"
+  ],
+  "action": {
+    "default_title": "Open VaultLink sidebar",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "index.html?panel=1"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "open-workspace": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Open VaultLink workspace"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self' http://127.0.0.1:* http://localhost:* http://[::1]:* https://*.ts.net:*; worker-src 'self'; media-src 'self' blob:; frame-src http://127.0.0.1:* http://localhost:* http://[::1]:* https://*.ts.net:*; base-uri 'none'"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

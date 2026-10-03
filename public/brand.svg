@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">VaultLink</title>
+  <rect width="64" height="64" rx="15" fill="#133A32"/>
+  <path d="M45 18 32 46" fill="none" stroke="#7DC9A5" stroke-width="9" stroke-linecap="round"/>
+  <path d="M19 18 32 46" fill="none" stroke="#133A32" stroke-width="13" stroke-linecap="round"/>
+  <path d="M19 18 32 46" fill="none" stroke="#F3F0E4" stroke-width="9" stroke-linecap="round"/>
+</svg>

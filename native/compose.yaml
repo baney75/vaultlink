@@ -1,0 +1,22 @@
+services:
+  obsidian:
+    image: ${OBSIDIAN_IMAGE:?Set a pinned lscr.io/linuxserver/obsidian digest in .env}
+    container_name: vaultlink-native-obsidian
+    environment:
+      PUID: ${PUID:?Set the vault owner's numeric user ID}
+      PGID: ${PGID:?Set the vault owner's numeric group ID}
+      TZ: ${TZ:-Etc/UTC}
+      CUSTOM_USER: ${OBSIDIAN_USER:?Set the desktop login name}
+      PASSWORD: ${OBSIDIAN_PASSWORD:?Set a strong desktop password}
+      HARDEN_DESKTOP: "true"
+    volumes:
+      - type: bind
+        source: ${CONFIG_PATH:?Set a dedicated config directory}
+        target: /config
+      - type: bind
+        source: ${VAULT_PATH:?Set the exact vault directory}
+        target: /vault
+    ports:
+      - "127.0.0.1:27125:3000"
+    shm_size: "1gb"
+    restart: unless-stopped

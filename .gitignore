@@ -1,0 +1,10 @@
+node_modules/
+dist/
+release/
+.private/
+playwright-report/
+test-results/
+*.log
+.env*
+!native/.env.example
+.DS_Store
