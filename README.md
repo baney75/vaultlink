@@ -2,14 +2,16 @@
 
 **Your Obsidian vault, beside the web.** VaultLink gives you two ways to work with the same ordinary vault files:
 
+![VaultLink workspace with a sample vault](docs/images/workspace.png)
+
+Built with TypeScript and Node.js.
+
 | Choose | What opens | Best for |
 | --- | --- | --- |
 | **VaultLink workspace** | A focused browser editor and optional Chromium sidebar | Notes, search, Markdown preview, PDF markup, image copies, and quick work from another device |
 | **Native Obsidian desktop** | The real Linux Obsidian app streamed into your browser | Vault themes and community plugins that work in that Linux environment |
 
 The workspace has its own editor; it does **not** run Obsidian themes or plugins. The native desktop opens the vault's `.obsidian` settings, though plugins that need a particular operating system, external program, or device may behave differently. These are separate sessions and addresses.
-
-![VaultLink workspace with a sample vault](docs/images/workspace.png)
 
 [Download the latest release](https://github.com/baney75/vaultlink/releases/latest) · [Verification and limits](docs/VERIFICATION.md) · [Design](docs/DESIGN.md)
 
