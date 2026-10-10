@@ -1,6 +1,30 @@
 # VaultLink
 
-**Your Obsidian vault, beside the web.** VaultLink gives you two ways to work with the same ordinary vault files:
+**Your Obsidian vault, beside the web.**
+
+## Start in 3 steps
+
+1. **Install Node.js 22.12 or newer** on the macOS or Linux computer that holds your vault, then download `vaultlink-<version>-companion.zip` from the [latest release](https://github.com/baney75/vaultlink/releases/latest) and extract the whole zip.
+2. **Run `node setup.mjs`** in that folder. Enter your vault path. Press Enter at each remote question to keep it on this computer only. Setup prints an address and a pairing token.
+3. **Open the address in your browser**, paste the token, and open a note. Keep the terminal open; Ctrl+C stops VaultLink.
+
+Windows companion setup is not verified. No `npm install` is needed.
+
+### Which remote option?
+
+| Option | Use it when | Setup | Notes |
+| --- | --- | --- | --- |
+| **Tailscale Serve (recommended)** | You want your vault on your phone or another computer | Install Tailscale on both devices, run `tailscale serve`, give setup the `https://...ts.net` address | Private to your tailnet. Needs no extra browser permission setup and works with the prebuilt extension |
+| **Custom HTTPS origin** | You already run a tunnel or reverse proxy, for example Cloudflare Tunnel, and will not use Tailscale | Give setup the one exact `https://` hostname. For the extension, build it with `VAULTLINK_CUSTOM_ORIGIN=https://your.host npm run build` | One origin only, HTTPS only, no wildcards. Your proxy must add its own access control. The pairing token is the only protection VaultLink adds. Never use a public, unauthenticated route |
+| **Local only** | You only work on the computer that holds the vault | Press Enter at both remote questions | Companion listens on `127.0.0.1`. Nothing leaves the machine |
+
+Add `Read-only` mode at the setup prompt (or run `npm run bridge -- --read-only ...`) to expose a vault for reading and searching only. The companion then rejects every write with 403 and the UI shows **Read-only**.
+
+> **Warning: native Obsidian mode is optional and works only with Linux plus Docker.** It streams a real Obsidian desktop from a container you run yourself. Skip it unless you need your Obsidian themes and plugins. The VaultLink workspace above does not need it.
+
+---
+
+VaultLink gives you two ways to work with the same ordinary vault files:
 
 ![VaultLink workspace with a sample vault](docs/images/workspace.png)
 
@@ -15,7 +39,7 @@ The workspace has its own editor; it does **not** run Obsidian themes or plugins
 
 [Download the latest release](https://github.com/baney75/vaultlink/releases/latest) · [Verification and limits](docs/VERIFICATION.md) · [Design](docs/DESIGN.md)
 
-## Quick start
+## Setup details
 
 You need [Node.js 22.12 or newer](https://nodejs.org/) on the macOS or Linux computer that holds your vault. Windows companion setup has not been verified. From the [latest release](https://github.com/baney75/vaultlink/releases/latest), download `vaultlink-<version>-companion.zip`, extract the whole zip into a folder, and run:
 
@@ -42,7 +66,15 @@ tailscale serve status
 
 Restart `node setup.mjs` and enter the private `https://...ts.net:8443` address printed by Serve. Open that address on the other device and enter the pairing token. The companion still listens only on loopback and still requires the token. Use Tailscale **Serve**, not Funnel. To remove the route, run `tailscale serve --https=8443 off`. See [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve) for HTTPS and access-rule prerequisites.
 
+### Use a custom HTTPS origin instead of Tailscale
+
+Only do this if you already operate a tunnel or reverse proxy. Forward HTTPS from one hostname to `http://127.0.0.1:27124`, and put your proxy's own authentication in front of it (for example Cloudflare Access). Run `node setup.mjs`, skip the Tailscale question, and enter the origin, such as `https://vault.example.com`. Setup accepts one DNS hostname over HTTPS, with no wildcard, path, credentials or IP address. The web app at that address works at once.
+
+The Chromium extension is built for exactly one extra origin. Build from source with `VAULTLINK_CUSTOM_ORIGIN=https://vault.example.com npm run build`. The build adds that exact origin to `optional_host_permissions` and the page CSP, so the browser asks you for access when you connect and never holds it before. See [SECURITY.md](SECURITY.md) for the trade-offs.
+
 ## Use the native Obsidian desktop
+
+> **Linux + Docker only, and optional.** There is no macOS or Windows path for this view.
 
 This option runs LinuxServer's Obsidian container on a Linux host with Docker Compose and Tailscale. It uses a **different** HTTPS address and a desktop login password, not the VaultLink pairing token. The container sees only the vault folder and a separate persistent config folder. Follow the [native setup guide](native/README.md) and fill [the environment template](native/.env.example); the supplied [Compose file](native/compose.yaml) binds HTTP to `127.0.0.1:27125` for a private Tailscale HTTPS proxy on port 8444. It does not start or configure a service by itself.
 

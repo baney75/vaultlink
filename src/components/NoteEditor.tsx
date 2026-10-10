@@ -6,10 +6,10 @@ import { useMemo, useRef, useState } from 'react';
 import type { SearchHit, VaultAPI, VaultEntry } from '../lib/types';
 import { MarkdownPreview } from './MarkdownPreview';
 
-interface Props { path: string; content: string; onChange: (content: string) => void; entries: VaultEntry[]; api: VaultAPI; onOpen: (path: string) => void }
+interface Props { readOnly?: boolean; path: string; content: string; onChange: (content: string) => void; entries: VaultEntry[]; api: VaultAPI; onOpen: (path: string) => void }
 type Mode = 'write' | 'split' | 'preview';
 
-export function NoteEditor({ path, content, onChange, entries, api, onOpen }: Props) {
+export function NoteEditor({ readOnly = false, path, content, onChange, entries, api, onOpen }: Props) {
   const isMarkdown = path.toLowerCase().endsWith('.md');
   const [mode, setMode] = useState<Mode>('write');
   const [details, setDetails] = useState(false);
@@ -55,7 +55,7 @@ export function NoteEditor({ path, content, onChange, entries, api, onOpen }: Pr
       <button type="button" className={details ? 'active' : ''} onClick={() => setDetails(!details)} title="Note details" aria-label="Note details" aria-expanded={details}><List size={16} /><span>Details</span></button>
     </div>}
     <div className={`editor-panes mode-${actualMode}`}>
-      {actualMode !== 'preview' && <div className="source-pane" aria-label="Markdown source editor"><CodeMirror value={content} onChange={onChange} extensions={isMarkdown ? [markdown({ codeLanguages: languages })] : []} basicSetup={{ lineNumbers: false, foldGutter: false, highlightActiveLine: false }} placeholder={isMarkdown ? 'Start writing…' : 'Enter text…'} aria-label="Note content" /></div>}
+      {actualMode !== 'preview' && <div className="source-pane" aria-label="Markdown source editor"><CodeMirror value={content} readOnly={readOnly} editable={!readOnly} onChange={onChange} extensions={isMarkdown ? [markdown({ codeLanguages: languages })] : []} basicSetup={{ lineNumbers: false, foldGutter: false, highlightActiveLine: false }} placeholder={isMarkdown ? 'Start writing…' : 'Enter text…'} aria-label="Note content" /></div>}
       {actualMode !== 'write' && <div className="preview-pane" ref={previewRef}><MarkdownPreview content={content} path={path} entries={entries} api={api} onOpen={onOpen} /></div>}
     </div>
     {details && isMarkdown && <div className="note-details" role="region" aria-label="Note details"><div className="details-header"><strong>Note details</strong><button aria-label="Close note details" onClick={() => setDetails(false)}><X size={16} /></button></div><div className="details-scroll"><div className="details-label">OUTLINE</div>{outline.length ? outline.map((heading, index) => <button key={`${index}:${heading.text}`} className="outline-row" style={{ paddingLeft: 12 + (heading.level - 1) * 11 }} onClick={() => jumpToHeading(index)}>{heading.text}</button>) : <p className="details-empty">Add headings to see an outline.</p>}<div className="details-label mentions-label">MENTIONS</div><p className="details-caption">Find notes containing this note’s title.</p><button className="find-mentions" onClick={() => void findMentions()} disabled={findingMentions}><Search size={14} />{findingMentions ? 'Searching…' : mentions ? 'Search again' : 'Find mentions'}</button>{mentionsError && <p className="details-error" role="alert">{mentionsError}</p>}{mentions && (mentions.length ? mentions.map((hit, index) => <button key={`${hit.path}:${hit.line}:${index}`} className="mention-row" onClick={() => onOpen(hit.path)}><strong>{hit.path}</strong><span>Line {hit.line} · {hit.text}</span></button>) : <p className="details-empty">No mentions found.</p>)}</div></div>}

@@ -81,6 +81,7 @@ h1,h2,p{margin-top:0}
 .brand-text span{font-size:10px;font-weight:650;letter-spacing:.12em;color:var(--vl-text-3)}
 .vault-title{display:flex;align-items:center;gap:9px;margin:0 12px;padding:7px 6px 7px 11px;border:1px solid var(--vl-line);background:var(--vl-surface);border-radius:var(--vl-radius);font-size:12.5px;font-weight:650;color:var(--vl-ink);box-shadow:var(--vl-shadow-1)}
 .vault-title>span:nth-child(2){overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1}
+.readonly-badge{flex:none;padding:2px 7px;border-radius:999px;background:var(--vl-surface-2,#eef0f3);border:1px solid var(--vl-line);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--vl-ink)}
 .vault-dot{width:7px;height:7px;flex:none;border-radius:50%;background:#3f9c76;box-shadow:0 0 0 3px #dcefe4}
 .vault-title .icon-button{width:28px;height:28px}
 .sidebar-actions{display:flex;gap:7px;padding:14px 12px 12px}

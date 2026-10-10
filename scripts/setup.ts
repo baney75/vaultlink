@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { promises as fs, constants } from 'node:fs';
 import { randomBytes, createHash } from 'node:crypto';
 import { createBridge } from '../bridge/server';
+import { parseCustomOrigin } from '../src/lib/origin';
 
 const extensionOrigin = 'chrome-extension://ehhkfcfccadfoelnhjhdgbcmpaeakihn';
 
@@ -75,6 +76,11 @@ function privateHttpsOrigin(input: string): string | undefined {
   return parsed.origin;
 }
 
+/** Opt-in for ONE non-Tailscale HTTPS origin, such as a Cloudflare Tunnel hostname. */
+function customHttpsOrigin(input: string): string | undefined {
+  return input.trim() ? parseCustomOrigin(input) : undefined;
+}
+
 async function main() {
   requireNode();
   const rl = createInterface({ input: stdin, output: stdout });
@@ -89,10 +95,16 @@ async function main() {
       throw error;
     }
     if (!(await fs.stat(vault)).isDirectory()) throw new Error('Choose a vault folder.');
-    const publicUrl = privateHttpsOrigin((await rl.question('Tailscale HTTPS address (Enter for this computer only): ')).trim());
+    let publicUrl = privateHttpsOrigin((await rl.question('Tailscale HTTPS address (Enter to skip): ')).trim());
+    if (!publicUrl) {
+      publicUrl = customHttpsOrigin(await rl.question('Custom HTTPS origin, e.g. a tunnel hostname (Enter for this computer only): '));
+      if (publicUrl) console.log(`\nCustom origin ${publicUrl} is outside Tailscale. Your tunnel or proxy must forward to http://127.0.0.1:27124 over HTTPS only, and should add its own access control.\nThe browser extension needs a build made with VAULTLINK_CUSTOM_ORIGIN=${publicUrl}; the web app works without it.`);
+    }
+    const readOnly = /^y(es)?$/i.test((await rl.question('Read-only mode, reject all saves and uploads? [y/N]: ')).trim()) || process.env.VAULTLINK_READ_ONLY === '1';
     const staticDir = await bundledWebDirectory();
     const { token, file } = await ensureToken(vault);
-    await createBridge({ vault, token, port: 27124, publicUrl, allowOrigins: [extensionOrigin], staticDir });
+    await createBridge({ vault, token, port: 27124, publicUrl, allowOrigins: [extensionOrigin], staticDir, readOnly });
+    if (readOnly) console.log('\nRead-only mode is on. Every write is rejected with 403.');
     const address = publicUrl ?? 'http://127.0.0.1:27124';
     console.log(`\nOpen ${address} or click the VaultLink extension.`);
     console.log(`Server address: ${address}\nPairing token: ${token}`);

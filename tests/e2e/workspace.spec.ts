@@ -155,3 +155,14 @@ test('session drafts cannot cross vaults served at the same URL with the same to
   page.on('dialog',dialog=>dialog.accept());await page.reload();await openFile(page,'Same.md');await expect(page.locator('.cm-content')).toHaveText('# Same base');
  }finally{service.closeAllConnections();await new Promise<void>(resolve=>service.close(()=>resolve()));}
 });
+test('read-only companion shows Read-only and disables writing',async({page})=>{
+ const roServer=await createBridge({vault,token,port:0,staticDir:resolve('dist'),readOnly:true});
+ const roBase=`http://127.0.0.1:${(roServer.address() as AddressInfo).port}`;
+ try{
+  await connect(page,roBase,roBase);
+  await expect(page.locator('.readonly-badge')).toHaveText('Read-only');
+  await expect(page.getByRole('button',{name:'New note'}).first()).toBeDisabled();
+  await openFile(page,'Welcome.md');
+  await expect(page.getByRole('button',{name:'Read-only',exact:true})).toBeDisabled();
+ }finally{roServer.closeAllConnections();await new Promise<void>(done=>roServer.close(()=>done()));}
+});

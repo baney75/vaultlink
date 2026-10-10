@@ -2,12 +2,12 @@ import { normalizeEndpoint } from './api';
 
 const STORAGE_KEY = 'vaultlink.native-origin';
 
-export function normalizeNativeURL(input: string): string {
+export function normalizeNativeURL(input: string, customOrigin?: string): string {
   try {
     if (/[?#]/.test(input.trim())) throw new Error('Address must be an origin.');
-    return normalizeEndpoint(input);
+    return customOrigin === undefined ? normalizeEndpoint(input) : normalizeEndpoint(input, customOrigin);
   }
-  catch { throw new Error('Enter only a private HTTPS *.ts.net origin, or an HTTP loopback origin for local development. Do not include a path, query, fragment, or credentials.'); }
+  catch { throw new Error('Enter only a private HTTPS *.ts.net origin, your configured custom HTTPS origin, or an HTTP loopback origin for local development. Do not include a path, query, fragment, or credentials.'); }
 }
 
 function extensionStorage() {
