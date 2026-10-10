@@ -16,7 +16,7 @@ A tunnel makes the token the only barrier unless you add access control at the p
 
 ## Read-only mode
 
-Start the companion with `--read-only` (or answer yes at setup) to reject every write with 403 `read_only`. Read, search and download still work. It is a server-side switch, checked after authentication and before any request body is read. It does not stop a malicious local process from editing the vault files.
+Start the companion with `--read-only` (or answer yes at setup) to reject every write with 403 `read_only`. Read, search and download still work. It is a server-side switch, checked after authentication and before any request body is read. It covers the companion API only. It does not stop a malicious local process, or the separate native Obsidian desktop, from editing the vault files. For a read-only native view, add `read_only: true` to the vault bind volume in `native/compose.yaml`; the VaultLink UI hides its native-view button in read-only mode.
 
 The token is a bearer credential, not a user account. It grants read/write access to the exposed file types throughout that vault unless the companion runs read-only. There are no per-folder permissions, audit identities, or multi-user administration in this release. Browser extension host permission is not authentication. Tailscale membership alone is not vault authorization.
 

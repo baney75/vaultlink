@@ -161,8 +161,13 @@ test('read-only companion shows Read-only and disables writing',async({page})=>{
  try{
   await connect(page,roBase,roBase);
   await expect(page.locator('.readonly-badge')).toHaveText('Read-only');
-  await expect(page.getByRole('button',{name:'New note'}).first()).toBeDisabled();
+  await expect(page.locator('.sidebar-actions .new-note-button')).toBeDisabled();
+  await expect(page.locator('.empty-actions .primary-button')).toBeDisabled();
+  await expect(page.locator('.empty-actions .subtle-button')).toBeDisabled();
+  await expect(page.getByRole('button',{name:'Native Obsidian view'})).toHaveCount(0);
   await openFile(page,'Welcome.md');
   await expect(page.getByRole('button',{name:'Read-only',exact:true})).toBeDisabled();
+  await openFile(page,'reading-guide.pdf');
+  await expect(page.getByRole('button',{name:'Save copy to vault'})).toBeDisabled();
  }finally{roServer.closeAllConnections();await new Promise<void>(done=>roServer.close(()=>done()));}
 });

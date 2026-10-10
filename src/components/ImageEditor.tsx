@@ -25,7 +25,7 @@ function renderImage(bitmap: ImageBitmap, crop: Crop, rotation: number, flipX: b
   return output;
 }
 
-export default function ImageEditor({ path, api, blob, onCreated, onDirtyChange }: Props) {
+export default function ImageEditor({ path, api, blob, onCreated, onDirtyChange, readOnly }: Props) {
   const [bitmap, setBitmap] = useState<ImageBitmap>();
   const [crop, setCrop] = useState<Crop>({ x: 0, y: 0, width: 1, height: 1 });
   const [rotation, setRotation] = useState(0);
@@ -103,7 +103,7 @@ export default function ImageEditor({ path, api, blob, onCreated, onDirtyChange 
     <div className="attachment-image-scroll"><canvas ref={preview} aria-label="Edited image preview" /></div>
     <div className="attachment-toolbar attachment-savebar">
       <label>Copy path <input className="attachment-path" value={name} disabled={busy} onChange={e => { if (!busy) setName(e.target.value); }} /></label>
-      <button type="button" disabled={busy || !bitmap || !!error} onClick={() => void save(false)}>Save copy to vault</button>
+      <button type="button" disabled={readOnly || busy || !bitmap || !!error} onClick={() => void save(false)}>Save copy to vault</button>
       <button type="button" disabled={busy || !bitmap || !!error} onClick={() => void save(true)}>Download copy</button>
     </div>
     <p className="attachment-hint">The original image stays intact. Animated images export as a still frame.</p>

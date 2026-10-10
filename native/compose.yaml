@@ -16,6 +16,7 @@ services:
       - type: bind
         source: ${VAULT_PATH:?Set the exact vault directory}
         target: /vault
+        # read_only: true   # uncomment for a read-only native view (pair with --read-only)
     ports:
       - "127.0.0.1:27125:3000"
     shm_size: "1gb"

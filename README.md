@@ -18,7 +18,7 @@ Windows companion setup is not verified. No `npm install` is needed.
 | **Custom HTTPS origin** | You already run a tunnel or reverse proxy, for example Cloudflare Tunnel, and will not use Tailscale | Give setup the one exact `https://` hostname. For the extension, build it with `VAULTLINK_CUSTOM_ORIGIN=https://your.host npm run build` | One origin only, HTTPS only, no wildcards. Your proxy must add its own access control. The pairing token is the only protection VaultLink adds. Never use a public, unauthenticated route |
 | **Local only** | You only work on the computer that holds the vault | Press Enter at both remote questions | Companion listens on `127.0.0.1`. Nothing leaves the machine |
 
-Add `Read-only` mode at the setup prompt (or run `npm run bridge -- --read-only ...`) to expose a vault for reading and searching only. The companion then rejects every write with 403 and the UI shows **Read-only**.
+Add `Read-only` mode at the setup prompt (or run `npm run bridge -- --read-only ...`) to expose a vault for reading and searching only. The companion then rejects every write with 403 and the UI shows **Read-only**. This covers the companion API only. The optional native Obsidian view is a separate app with its own write access to the vault; VaultLink hides its button in read-only mode, and for a read-only native view you must also add `read_only: true` to the vault volume in `native/compose.yaml`.
 
 > **Warning: native Obsidian mode is optional and works only with Linux plus Docker.** It streams a real Obsidian desktop from a container you run yourself. Skip it unless you need your Obsidian themes and plugins. The VaultLink workspace above does not need it.
 
