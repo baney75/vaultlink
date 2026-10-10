@@ -1,16 +1,17 @@
+import { activeCustomOrigin, isLoopbackHttp, isTailnetHttps, parseCustomOrigin } from './origin';
 import type { Connection, VaultAPI, VaultInfo, VaultEntry, NoteDocument, SearchHit } from './types';
 
 export class ApiError extends Error {
   constructor(message: string, public status = 0, public code = 'NETWORK_ERROR') { super(message); this.name = 'ApiError'; }
 }
-export function normalizeEndpoint(input: string): string {
+/** Accept loopback HTTP, Tailscale *.ts.net HTTPS, or the single configured custom HTTPS origin. */
+export function normalizeEndpoint(input: string, customOrigin: string | undefined = activeCustomOrigin()): string {
   let url: URL;
   try { url = new URL(input.trim()); } catch { throw new Error('Enter a complete address, such as http://127.0.0.1:27124.'); }
   if (url.username || url.password || url.search || url.hash || (url.pathname !== '/' && url.pathname !== '')) throw new Error('Use only the server address, without a path, password, query, or fragment.');
-  const loopback = ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname);
-  const tailnet = url.hostname.endsWith('.ts.net') && url.hostname.split('.').length >= 4;
-  if (!(loopback && url.protocol === 'http:') && !(tailnet && url.protocol === 'https:')) throw new Error('Use local HTTP on localhost, or the private HTTPS .ts.net address from Tailscale Serve.');
-  return url.origin;
+  if (isLoopbackHttp(url) || isTailnetHttps(url)) return url.origin;
+  if (customOrigin && url.origin === parseCustomOrigin(customOrigin)) return url.origin;
+  throw new Error(customOrigin ? 'Use local HTTP on localhost, the private HTTPS .ts.net address from Tailscale Serve, or your configured custom HTTPS origin.' : 'Use local HTTP on localhost, or the private HTTPS .ts.net address from Tailscale Serve.');
 }
 function extensionStorage() { return typeof chrome !== 'undefined' && chrome.runtime?.id && chrome.storage?.session ? chrome.storage.session : null; }
 export async function loadConnection(): Promise<Connection | null> {

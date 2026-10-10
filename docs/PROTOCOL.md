@@ -1,6 +1,6 @@
 # Bridge protocol v1
 All /api routes require Authorization: Bearer <token>. Content is private; cache no-store.
-- GET /api/info -> { id, name, protocol:1, capabilities:string[] }. id is an opaque SHA-256 of the canonical root identity (path/device/inode), used to isolate session drafts
+- GET /api/info -> { id, name, protocol:1, capabilities:string[], readOnly:boolean }. With the companion's read-only mode on, `upload` is omitted from capabilities and every non-GET request after authorization returns 403 `{ code:"read_only" }`. id is an opaque SHA-256 of the canonical root identity (path/device/inode), used to isolate session drafts
 - GET /api/tree -> { entries: VaultEntry[] }. Folders and files; exclude every dot component and symlink.
 - GET /api/note?path=... -> { path, content, revision }. revision is SHA-256 hex of bytes. Plain editable UTF8: md, txt, json, canvas, csv.
 - PUT /api/note?path=... JSON { content, revision:string|null } -> same. null creates only if absent, otherwise revision must equal current bytes. 409 conflict. Existing file safely backed up before atomic replacement. Max note 2MiB.

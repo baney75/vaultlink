@@ -2,6 +2,26 @@
   "name": "vaultlink",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baney75/vaultlink.git"
+  },
+  "homepage": "https://github.com/baney75/vaultlink#readme",
+  "bugs": {
+    "url": "https://github.com/baney75/vaultlink/issues"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-vault",
+    "markdown",
+    "notes",
+    "chrome-extension",
+    "side-panel",
+    "tailscale",
+    "local-first",
+    "self-hosted"
+  ],
   "type": "module",
   "description": "Your Obsidian vault, beside the web.",
   "engines": {

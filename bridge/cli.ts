@@ -16,8 +16,9 @@ Required:
 Options:
   --port NUMBER         Loopback port (default 27124)
   --allow-origin URL    Exact browser origin; repeat for each approved origin
-  --public-url URL      HTTPS origin served through a private reverse proxy
+  --public-url URL      HTTPS origin served through Tailscale Serve or one named reverse proxy / tunnel
   --web PATH            Built web app directory (for example dist)
+  --read-only           Reject every write (note save, upload) with 403
   --show-token          Print pairing credential to this terminal
   --help                Show this help
 
@@ -30,10 +31,12 @@ async function main() {
   const values: Record<string, string> = {};
   const allowOrigins: string[] = [];
   let showToken = false;
+  let readOnly = false;
   for (let i = 0; i < args.length; i++) {
     const argument = args[i];
     if (argument === '--help' || argument === '-h') { process.stdout.write(usage()); return; }
     if (argument === '--show-token') { showToken = true; continue; }
+    if (argument === '--read-only') { readOnly = true; continue; }
     if (!['--vault', '--token-file', '--port', '--allow-origin', '--public-url', '--web'].includes(argument))
       throw new Error(`Unknown option ${argument}. Use --help for usage.`);
     const value = args[++i];
@@ -69,7 +72,7 @@ async function main() {
   const port = rawPort ? Number(rawPort) : 27124;
   if (port < 1 || port > 65535) throw new Error('--port must be a number from 1 to 65535.');
   const server = await createBridge({ vault: values['--vault'], token, port,
-    allowOrigins, publicUrl: values['--public-url'], staticDir: values['--web'] });
+    allowOrigins, publicUrl: values['--public-url'], staticDir: values['--web'], readOnly });
   process.stdout.write(`VaultLink listening at http://127.0.0.1:${(server.address() as { port: number }).port}\n`);
   process.stdout.write(`Vault: ${values['--vault']}\nToken file: ${tokenFile}\n`);
   if (showToken) process.stdout.write(`Pairing token: ${token}\n`);

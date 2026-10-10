@@ -25,7 +25,7 @@ function parseCanvas(content: string): CanvasData {
   return data;
 }
 
-export default function CanvasEditor({ path, api, onDirtyChange }: AttachmentProps) {
+export default function CanvasEditor({ path, api, onDirtyChange, readOnly }: AttachmentProps) {
   const [document, setDocument] = useState<NoteDocument>();
   const [data, setData] = useState<CanvasData>();
   const [selected, setSelected] = useState<string>();
@@ -78,7 +78,7 @@ export default function CanvasEditor({ path, api, onDirtyChange }: AttachmentPro
     {selectedNode?.type === 'text' && <div className="attachment-canvas-edit">
       <label htmlFor="canvas-text-edit">Text card</label>
       <textarea id="canvas-text-edit" value={drafts[selectedNode.id] ?? selectedNode.text ?? ''} maxLength={100_000} disabled={busy} onChange={e => { if (busy) return; const next = { ...drafts, [selectedNode.id]: e.target.value }; setDrafts(next); onDirtyChange?.(data?.nodes.some(node => node.type === 'text' && next[node.id] !== undefined && next[node.id] !== node.text) || false); }} rows={7} />
-      <button type="button" disabled={busy || !hasChanges} onClick={() => void save()}>Save text changes</button>
+      <button type="button" disabled={readOnly || busy || !hasChanges} onClick={() => void save()}>Save text changes</button>
     </div>}
     {!data && !error && <p role="status">Loading canvas…</p>}
     {error && <p role="alert" className="attachment-error">{error}</p>}{message && <p role="status">{message}</p>}

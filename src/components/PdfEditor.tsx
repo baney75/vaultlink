@@ -10,7 +10,7 @@ GlobalWorkerOptions.workerSrc = workerUrl;
 type Props = AttachmentProps & { blob: Blob };
 type Tool = 'none' | 'text' | 'highlight';
 
-export default function PdfEditor({ path, api, blob, onCreated, onDirtyChange }: Props) {
+export default function PdfEditor({ path, api, blob, onCreated, onDirtyChange, readOnly }: Props) {
   const [bytes, setBytes] = useState<Uint8Array>();
   const [page, setPage] = useState(0);
   const [pages, setPages] = useState(0);
@@ -133,7 +133,7 @@ export default function PdfEditor({ path, api, blob, onCreated, onDirtyChange }:
     {renderReady && <p role="status" className="attachment-ready">Page ready</p>}
     <div className="attachment-toolbar attachment-savebar">
       <label>Copy path <input className="attachment-path" value={name} disabled={busy} onChange={e => setName(e.target.value)} /></label>
-      <button type="button" disabled={busy || !bytes} onClick={() => void save()}>Save copy to vault</button>
+      <button type="button" disabled={readOnly || busy || !bytes} onClick={() => void save()}>Save copy to vault</button>
       <button type="button" disabled={busy || !bytes} onClick={() => downloadBlob(outputBlob(), name.split('/').pop() || 'annotated.pdf')}>Download copy</button>
     </div>
     <p className="attachment-hint">Annotations add content to the page. Existing PDF text cannot be rewritten here. The original stays intact.</p>

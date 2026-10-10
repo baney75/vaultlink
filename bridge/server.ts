@@ -25,6 +25,8 @@ export interface BridgeOptions {
   allowOrigins?: string[];
   publicUrl?: string;
   staticDir?: string;
+  /** Reject every write endpoint with 403 `read_only`. */
+  readOnly?: boolean;
 }
 
 class BridgeError extends Error {
@@ -208,6 +210,7 @@ export async function createBridge(options: BridgeOptions): Promise<http.Server>
   if (host !== '127.0.0.1' && host !== '::1') throw new Error('Bridge must bind to loopback.');
   const port = options.port ?? 27124;
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Invalid port.');
+  const readOnly = options.readOnly === true;
   const allowedOrigins = new Set<string>();
   for (const origin of options.allowOrigins ?? []) {
     const parsed = new URL(origin);
@@ -268,7 +271,9 @@ export async function createBridge(options: BridgeOptions): Promise<http.Server>
       }
       if (!url.pathname.startsWith('/api/')) fail(404, 'not_found', 'Route does not exist.');
       if (!tokenMatch(req.headers.authorization, options.token)) fail(401, 'unauthorized', 'Pairing token required.');
-      if (req.method === 'GET' && url.pathname === '/api/info') return json(res, 200, { id: vaultId, name: path.basename(vault), protocol: 1, capabilities: ['tree', 'note', 'file', 'search', 'upload'] });
+      if (readOnly && req.method !== 'GET' && req.method !== 'HEAD' && req.method !== 'OPTIONS')
+        fail(403, 'read_only', 'This companion is in read-only mode. Restart it without read-only to save changes.');
+      if (req.method === 'GET' && url.pathname === '/api/info') return json(res, 200, { id: vaultId, name: path.basename(vault), protocol: 1, capabilities: readOnly ? ['tree', 'note', 'file', 'search'] : ['tree', 'note', 'file', 'search', 'upload'], readOnly });
       if (req.method === 'GET' && url.pathname === '/api/tree') return json(res, 200, { entries: await walk(vault) });
       if (req.method === 'GET' && url.pathname === '/api/note') {
         const relative = validRelative(url.searchParams.get('path'));
