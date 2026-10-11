@@ -110,3 +110,9 @@ npm run demo
 The demo makes a synthetic vault under `.private/demo-vault`; open `http://127.0.0.1:27124` and use the sample token printed in the terminal. Re-running the demo resets those samples. `npm run setup` runs the source companion against a vault you choose after building. `npm run package` builds the browser app and produces both release zips plus `release/SHA256SUMS`. Browser tests use `npx playwright install chromium` followed by `npm run test:e2e`. The [protocol](docs/PROTOCOL.md) describes the local API.
 
 VaultLink is independent of Obsidian and Tailscale. See [LICENSE](LICENSE) for licensing terms.
+
+## Sponsors
+
+<!-- sponsors:start -->
+No sponsors yet. [Sponsor on GitHub](https://github.com/sponsors/baney75) and your name appears here automatically.
+<!-- sponsors:end -->
