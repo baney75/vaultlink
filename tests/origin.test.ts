@@ -26,7 +26,7 @@ test('custom origin rejects http, other hosts, userinfo, unconfigured ports and 
 test('without a custom origin nothing outside loopback and ts.net passes', () => {
   assert.throws(() => normalizeEndpoint('https://vault.example.com', undefined));
   assert.equal(normalizeEndpoint('http://127.0.0.1:27124', custom), 'http://127.0.0.1:27124');
-  assert.equal(normalizeEndpoint('https://host.tail1234.ts.net', custom), 'https://host.tail1234.ts.net');
+  assert.equal(normalizeEndpoint('https://host.example.ts.net', custom), 'https://host.example.ts.net');
   assert.throws(() => normalizeEndpoint('http://vault.example.com', custom), 'http stays rejected even when configured');
 });
 
